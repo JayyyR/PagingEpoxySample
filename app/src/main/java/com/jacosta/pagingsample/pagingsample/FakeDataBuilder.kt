@@ -5,12 +5,11 @@ import java.util.concurrent.TimeUnit
 
 class FakeDataBuilder {
 
-
     private val fakeData = ArrayList<Data>()
 
     init {
         //create fake data set
-        for (i in 0..1000) {
+        for (i in 0..10000) {
             fakeData.add(Data(i.toString()))
         }
     }
