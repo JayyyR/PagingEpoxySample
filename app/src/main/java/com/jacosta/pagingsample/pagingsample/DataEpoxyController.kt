@@ -1,6 +1,9 @@
 package com.jacosta.pagingsample.pagingsample
 
+import com.airbnb.epoxy.DiffResult
+import com.airbnb.epoxy.EpoxyController
 import com.airbnb.epoxy.EpoxyModel
+import com.airbnb.epoxy.OnModelBuildFinishedListener
 import com.airbnb.epoxy.paging.PagedListEpoxyController
 
 class DataEpoxyController: PagedListEpoxyController<Data>() {
@@ -11,4 +14,14 @@ class DataEpoxyController: PagedListEpoxyController<Data>() {
     }
 
 
+}
+
+inline fun EpoxyController.listenForNextModelBuild(crossinline callback: (DiffResult) -> Unit) {
+    val modelBuildListener = object : OnModelBuildFinishedListener {
+        override fun onModelBuildFinished(result: DiffResult) {
+            callback.invoke(result)
+            this@listenForNextModelBuild.removeModelBuildListener(this)
+        }
+    }
+    this.addModelBuildListener(modelBuildListener)
 }

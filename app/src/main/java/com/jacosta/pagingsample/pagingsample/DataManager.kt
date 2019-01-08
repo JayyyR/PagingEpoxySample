@@ -3,12 +3,17 @@ package com.jacosta.pagingsample.pagingsample
 import android.os.Handler
 import android.os.Looper
 import androidx.paging.PagedList
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
+import java.util.*
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 
-class DataManager {
+class DataManager(private val compositeDisposable: CompositeDisposable) {
 
     private lateinit var pageKeyedDataSource: PageKeyedSampleDataSource
     private val dataSourceSubscriptions = CompositeDisposable()
@@ -19,7 +24,7 @@ class DataManager {
     //backing data set that we keep so we can add and manipulate our pagedList dataset.
     //we cannot directly edit a paged list so this becomes necessary. When we need to make changes to our data
     //we will edit our backing data set and create a new PageKeyedSampleDataSource
-    private val backingDataSet = ArrayList<Data>()
+    private var backingDataSet = ArrayList<Data>()
     private var latestBeforeKey: Int? = null
 
     //this is a callback that will get triggered when our data set gets updated via the fake API
@@ -28,6 +33,9 @@ class DataManager {
         backingDataSet.addAll(0, dataToAdd)
         latestBeforeKey = beforeKey
     }
+
+    //just to add data in order
+    var addDataCount = -1
 
     init {
         createNewMessageAPIDataSource()
@@ -75,6 +83,46 @@ class DataManager {
         //feed paged list to our subject
         sampleData.onNext(messagePagedList)
     }
+
+    fun addData() {
+
+        //create and add new data
+        val newData = Data(
+            dataString = addDataCount.toString(),
+            brandNew = true
+        )
+        addDataCount--
+
+        //update data set
+        backingDataSet.add(newData)
+        updateDataSource()
+
+        //simulate API call that manipulates data you just added
+        val disposable = Observable.just(true)
+            .delay(3100, TimeUnit.MILLISECONDS)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe {
+                markDataAsNotNew(newData.dataString)
+                updateDataSource()
+            }
+
+        compositeDisposable.add(disposable)
+
+
+    }
+
+    private fun markDataAsNotNew(id: String?) {
+        val updatedDataSet = backingDataSet.map { data ->
+            val brandNew = if (data.dataString == id) false else data.brandNew
+            data.copy(
+                brandNew = brandNew
+            )
+        }
+
+        backingDataSet = ArrayList(updatedDataSet)
+    }
+
 
 
     /**
