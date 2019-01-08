@@ -9,7 +9,7 @@ class FakeDataBuilder {
 
     init {
         //create fake data set
-        for (i in 0..10000) {
+        for (i in 0..1000) {
             fakeData.add(Data(i.toString()))
         }
     }
@@ -17,7 +17,7 @@ class FakeDataBuilder {
     fun loadInitialData(count: Int) : Flowable<FakeDataResponse> {
 
         val fakeResponse = FakeDataResponse(
-            fakeData = fakeData.subList(0, count),
+            fakeData = fakeData.subList(0, count).reversed(),
             fakePageKey = count
         )
 
@@ -37,7 +37,7 @@ class FakeDataBuilder {
         }
 
         val fakeResponse = FakeDataResponse(
-            fakeData = fakeData.subList(beforePageKey, indexToLoadTo),
+            fakeData = fakeData.subList(beforePageKey, indexToLoadTo).reversed(),
             fakePageKey = fakePageKey
         )
 

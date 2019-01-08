@@ -13,7 +13,7 @@ class DataManager {
     private lateinit var pageKeyedDataSource: PageKeyedSampleDataSource
     private val dataSourceSubscriptions = CompositeDisposable()
     private val networkExecutor = Executors.newFixedThreadPool(5)
-    private var sampleData: BehaviorSubject<PagedList<Data>>? = BehaviorSubject.create()
+    val sampleData: BehaviorSubject<PagedList<Data>> = BehaviorSubject.create()
 
 
     //backing data set that we keep so we can add and manipulate our pagedList dataset.
@@ -27,6 +27,10 @@ class DataManager {
     private val updateBackingData: (List<Data>, Int?) -> Unit = {dataToAdd, beforeKey ->
         backingDataSet.addAll(0, dataToAdd)
         latestBeforeKey = beforeKey
+    }
+
+    init {
+        createNewMessageAPIDataSource()
     }
 
     /**
@@ -53,7 +57,7 @@ class DataManager {
      * Gets and posts the latest data we have. This creates a PagedList from our data source and
      * feeds it to interested listeners
      */
-    private fun getLatestData() {
+    fun getLatestData() {
 
         //create pagedList config
         val pagedListConfig = PagedList.Config.Builder()
@@ -69,7 +73,7 @@ class DataManager {
             .build()
 
         //feed paged list to our subject
-        sampleData?.onNext(messagePagedList)
+        sampleData.onNext(messagePagedList)
     }
 
 
