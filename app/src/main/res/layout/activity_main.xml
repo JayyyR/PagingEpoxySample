@@ -16,6 +16,16 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintBottom_toTopOf="@+id/add_data_button"/>
+
+
+    <Button
+            android:id="@+id/add_data_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:text="@string/add_data"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -6,7 +6,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
 class PageKeyedSampleDataSource(
-    private val initialDataSet: ArrayList<Data> = ArrayList(),
+    private val initialDataSet: List<Data> = ArrayList(),
     private val updateBackingDataCallback: ((List<Data>, Int?) -> Unit)?,
     private val initialBeforeKey: Int?,
     private val compositeDisposable: CompositeDisposable

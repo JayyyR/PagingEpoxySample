@@ -54,7 +54,7 @@ class DataManager(private val compositeDisposable: CompositeDisposable) {
 
         //create new data source with updated backing data (if it exists)
         pageKeyedDataSource = PageKeyedSampleDataSource(
-            initialDataSet = backingDataSet,
+            initialDataSet = backingDataSet.map { it }, //make sure to pass a copy of the list not the list directly (that creates odd behavior)
             initialBeforeKey = latestBeforeKey,
             compositeDisposable = dataSourceSubscriptions,
             updateBackingDataCallback = updateBackingData

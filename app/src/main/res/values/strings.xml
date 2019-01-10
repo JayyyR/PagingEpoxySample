@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">PagingSample</string>
+    <string name="add_data">Add Data</string>
 </resources>
